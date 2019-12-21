@@ -1,4 +1,4 @@
-package creation;
+package streams;
 
 import org.junit.Test;
 
@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -17,7 +20,7 @@ public class StreamCreation {
      * Create Stream using Stream.of
      */
     @Test
-    public void stringArrayToCSV1() {
+    public void useOfStreamOf() {
         // Arrays to Stream using Arrays.stream
         Stream<String> stream = Stream.of("Herman", "Lily", "Eddie", "Marilyn", "Grandpa");
         String csv = stream.collect(Collectors.joining(","));
@@ -25,10 +28,10 @@ public class StreamCreation {
     }
 
     /**
-     * Using Arrays.stream
+     * Array to Stream Using Arrays.stream
      */
     @Test
-    public void stringArrayToCSV2() {
+    public void createFromArray() {
         // Arrays to Stream using Arrays.stream
         String[] munsters = {"Herman", "Lily", "Eddie", "Marilyn", "Grandpa"};
         String csv = Arrays.stream(munsters).collect(Collectors.joining(","));
@@ -39,12 +42,29 @@ public class StreamCreation {
      * Using Stream.iterate
      */
     @Test
-    public void iterateDemo() {
-        Stream<LocalDate> stream = Stream.iterate(LocalDate.of(1961, 12, 15).plusYears(1), ld -> ld.plusYears(1L))
+    public void useOfIterate() {
+        LocalDate initialValue = LocalDate.of(1961, 12, 15).plusYears(1);
+        UnaryOperator<LocalDate> incrementer = ld -> ld.plusYears(1L);
+        Stream<LocalDate> stream = Stream.iterate(initialValue, incrementer)
                 .limit(10);
-        List<LocalDate> firstTenBirhDays = stream.collect(Collectors.toList());
-        System.out.println(firstTenBirhDays);
-// prints 10 days starting from today
+        List<LocalDate> firstTenBirthDays = stream.collect(Collectors.toList());
+        System.out.println(firstTenBirthDays);
+    }
+
+    /**
+     * Using Stream.iterate with predicate Java > 9
+     * <p>
+     * Case, use predicate instead of limit,
+     * NOTE predicate cannot be used for filtering
+     */
+    @Test
+    public void useOfIterateWithPredicateInsteadOfLimit() {
+        LocalDate initialValue = LocalDate.of(1961, 12, 15).plusYears(1);
+        UnaryOperator<LocalDate> incrementer = ld -> ld.plusYears(1L);
+        Predicate<LocalDate> limitPredicate = d -> d.getYear() < 1972;
+        Stream<LocalDate> stream = Stream.iterate(initialValue, limitPredicate, incrementer);
+        List<LocalDate> firstTenBirthDays = stream.collect(Collectors.toList());
+        System.out.println(firstTenBirthDays);
     }
 
 
@@ -52,8 +72,9 @@ public class StreamCreation {
      * Use of Stream.generate
      */
     @Test
-    public void generateListOfRandomDoubles() {
-        List<Double> randomList = Stream.generate(Math::random)
+    public void useOfGenerate() {
+        Supplier<Double> supplier = Math::random;
+        List<Double> randomList = Stream.generate(supplier)
                 .limit(5)
                 .collect(Collectors.toList());
         System.out.println(randomList);
@@ -83,10 +104,10 @@ public class StreamCreation {
     @Test
     public void rangesAndBoxingDemo() {
         IntStream intStream = IntStream.range(10, 15);
+        // Without the following ddowesn't compile
         Stream<Integer> streamOfInt = intStream.boxed();
         List<Integer> intList = streamOfInt.collect(Collectors.toList());
         System.out.println(intList);
-// prints [10, 11, 12, 13, 14]
 
         LongStream longStream = LongStream.rangeClosed(10, 15);
         Stream<Long> streamOfLong = longStream.boxed();
@@ -100,10 +121,13 @@ public class StreamCreation {
         System.out.println(listOfMappedLongs);
 
         // Use of three argument collect
+        // TODO dont get the mechanics
         List<Long> listOfCollectedLongs = LongStream.rangeClosed(10, 15)
                 .collect(ArrayList<Long>::new, ArrayList::add, ArrayList::addAll);
         System.out.println(listOfMappedLongs);
     }
+
+
 
 
 }

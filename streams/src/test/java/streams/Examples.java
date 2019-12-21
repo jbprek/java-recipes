@@ -1,9 +1,8 @@
-package creation;
+package streams;
 
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class Examples {

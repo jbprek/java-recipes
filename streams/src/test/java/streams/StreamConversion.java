@@ -1,4 +1,4 @@
-package creation;
+package streams;
 
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class StreamConversion {
     }
 
     /**
-     * Convert to a Array
+     * Convert to a Array, Stream.toArray method
      */
     @Test
     public void toArrayDemo(){
