@@ -120,8 +120,7 @@ public class StreamCreation {
         List<Long> listOfMappedLongs = streamOfLongMapped.collect(Collectors.toList());
         System.out.println(listOfMappedLongs);
 
-        // Use of three argument collect
-        // TODO dont get the mechanics
+        // Use of three argument collect - TODO dont get the mechanics
         List<Long> listOfCollectedLongs = LongStream.rangeClosed(10, 15)
                 .collect(ArrayList<Long>::new, ArrayList::add, ArrayList::addAll);
         System.out.println(listOfMappedLongs);
