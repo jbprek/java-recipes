@@ -52,3 +52,24 @@ public class Sorting {
     }
 
 }
+
+/**
+ * Sort using variable criteria
+ * Order is specified by a flag
+ */
+@Test
+public void testYearRange(){
+    System.out.println(yearRange(false));
+    System.out.println(yearRange(true));
+}
+
+
+public List<Integer> yearRange(boolean reverseOrder) {
+    Comparator<Integer> comparator = reverseOrder ? (x, y)-> y.compareTo(x) :  (x, y)-> x.compareTo(y);
+    UnaryOperator<LocalDate> incrementer = ld ->  ld.plusYears(1L);
+    return Stream.iterate(LocalDate.now(), incrementer)
+            .map(LocalDate::getYear)
+            .limit(3)
+            .sorted(comparator)
+            .collect(Collectors.toList());
+}
